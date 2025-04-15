@@ -8,7 +8,7 @@
     tools:context=".UploadCategoryActivity">
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/edtCategory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -16,24 +16,36 @@
         android:layout_marginEnd="24dp"
         android:ems="10"
         android:inputType="text"
+        android:hint="Enter category name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/categoryImage"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextText"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="@+id/edtCategory"
+        app:layout_constraintTop_toBottomOf="@+id/edtCategory"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <View
+        android:id="@+id/fetchImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/categoryImage"
+        app:layout_constraintEnd_toEndOf="@+id/categoryImage"
+        app:layout_constraintStart_toStartOf="@+id/categoryImage"
+        app:layout_constraintTop_toTopOf="@+id/categoryImage" />
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnUploadCat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Upload"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintEnd_toEndOf="@+id/edtCategory"
+        app:layout_constraintTop_toTopOf="@+id/categoryImage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
