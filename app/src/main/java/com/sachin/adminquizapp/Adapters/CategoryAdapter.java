@@ -1,6 +1,7 @@
 package com.sachin.adminquizapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sachin.adminquizapp.Models.CategoryModel;
 import com.sachin.adminquizapp.R;
+import com.sachin.adminquizapp.SubCategoryActivity;
 import com.sachin.adminquizapp.databinding.RvCategoryDesignBinding;
 import com.squareup.picasso.Picasso;
 
@@ -40,6 +42,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.viewHo
         holder.binding.categoryName.setText(categoryModel.getCategoryName());
 
         Picasso.get().load(categoryModel.getCategoryImage()).placeholder(R.drawable.logo).into(holder.binding.categoryImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SubCategoryActivity.class);
+                intent.putExtra("catId",categoryModel.getKey());
+                context.startActivity(intent);
+            }
+        });
 
     }
 
