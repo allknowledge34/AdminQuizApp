@@ -7,14 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -24,32 +19,32 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.sachin.adminquizapp.Adapters.CategoryAdapter;
-import com.sachin.adminquizapp.Adapters.SubCategoryAdapter;
+import com.sachin.adminquizapp.Adapters.QuestionAdapter;
 import com.sachin.adminquizapp.Models.CategoryModel;
-import com.sachin.adminquizapp.Models.SubCategoryModel;
-import com.sachin.adminquizapp.databinding.ActivityMainBinding;
-import com.sachin.adminquizapp.databinding.ActivitySubCategoryBinding;
+import com.sachin.adminquizapp.Models.QuestionsModel;
+import com.sachin.adminquizapp.databinding.ActivityQuestionsBinding;
 
 import java.util.ArrayList;
 
-public class SubCategoryActivity extends AppCompatActivity {
+public class QuestionsActivity extends AppCompatActivity {
 
-    ActivitySubCategoryBinding binding;
+    ActivityQuestionsBinding binding;
     FirebaseDatabase database;
     FirebaseStorage storage;
-    SubCategoryAdapter adapter;
-    ArrayList<SubCategoryModel> list;
+    QuestionAdapter adapter;
+    ArrayList<QuestionsModel> list;
     Dialog loadingDialog;
-    private String categoryId;
+    private String catId,subCatId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySubCategoryBinding.inflate(getLayoutInflater());
+        binding = ActivityQuestionsBinding.inflate(getLayoutInflater());
         setStatusBarColor();
         setContentView(binding.getRoot());
 
+        catId = getIntent().getStringExtra("catId");
+        subCatId = getIntent().getStringExtra("subCatId");
         database= FirebaseDatabase.getInstance();
-        categoryId = getIntent().getStringExtra("catId");
 
         list = new ArrayList<>();
         loadingDialog = new Dialog(this);
@@ -58,11 +53,11 @@ public class SubCategoryActivity extends AppCompatActivity {
         loadingDialog.show();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.rvCategory.setLayoutManager(layoutManager);
+        binding.rvQuestions.setLayoutManager(layoutManager);
 
-        adapter = new SubCategoryAdapter(this,list,categoryId);
-        binding.rvCategory.setAdapter(adapter);
-        database.getReference().child("categories").child(categoryId).child("subCategories").addValueEventListener(new ValueEventListener() {
+        adapter = new QuestionAdapter(this,list,catId,subCatId);
+        binding.rvQuestions.setAdapter(adapter);
+        database.getReference().child("categories").child(catId).child("subCategories").child(subCatId).child("questions").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
@@ -70,7 +65,7 @@ public class SubCategoryActivity extends AppCompatActivity {
 
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                        SubCategoryModel model = dataSnapshot.getValue(SubCategoryModel.class);
+                        QuestionsModel model = dataSnapshot.getValue(QuestionsModel.class);
                         model.setKey(dataSnapshot.getKey());
                         list.add(model);
                     }
@@ -79,7 +74,7 @@ public class SubCategoryActivity extends AppCompatActivity {
                 }
                 else {
                     loadingDialog.dismiss();
-                    Toast.makeText(SubCategoryActivity.this, "category not exits", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuestionsActivity.this, "category not exits", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -87,7 +82,7 @@ public class SubCategoryActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
                 loadingDialog.dismiss();
-                Toast.makeText(SubCategoryActivity.this, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(QuestionsActivity.this, error.getMessage().toString(), Toast.LENGTH_SHORT).show();
 
             }
         });{
@@ -97,8 +92,9 @@ public class SubCategoryActivity extends AppCompatActivity {
         binding.uploadCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SubCategoryActivity.this,UploadSubCategoryActivity.class);
-                intent.putExtra("catId",categoryId);
+                Intent intent = new Intent(QuestionsActivity.this,UploadQuestionsActivity.class);
+                intent.putExtra("catId",catId);
+                intent.putExtra("subCatId",subCatId);
                 startActivity(intent);
             }
         });
